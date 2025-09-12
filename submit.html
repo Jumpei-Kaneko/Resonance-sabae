@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音を残す - Resonance</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="./main-submit.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>音を残す</h1>
+        </header>
+        <main>
+            <form id="upload-form">
+                <p>あなたの好きな西山公園の音（30秒以内）を、作品の一部として残してみませんか？</p>
+                <input type="file" id="audio-file" accept="audio/*" required>
+                <button type="submit">この音を作品に残す</button>
+            </form>
+            <div id="status-message"></div>
+            <a href="./index.html" class="back-link">メニューに戻る</a>
+        </main>
+    </div>
+</body>
+</html>
