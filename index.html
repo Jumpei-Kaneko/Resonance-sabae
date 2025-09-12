@@ -4,73 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resonance ―響き合い</title>
-    <style>
-        body { 
-            font-family: sans-serif; 
-            text-align: center; 
-            background-color: #111; 
-            color: #eee; 
-            padding: 20px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container { 
-            max-width: 400px; 
-            width: 90%;
-        }
-        h1 { 
-            font-size: 1.5em; 
-            border-bottom: 1px solid #555; 
-            padding-bottom: 10px; 
-            letter-spacing: 0.1em;
-        }
-        button {
-            width: 100%;
-            padding: 20px;
-            font-size: 1.5em;
-            margin-top: 30px;
-            cursor: pointer;
-            background-color: #333;
-            color: white;
-            border: 1px solid #888;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #555;
-        }
-        p { 
-            font-size: 0.9em; 
-            color: #aaa; 
-            margin-top: 5px; 
-            text-align: left; 
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Resonance ―響き合い</h1>
-
-        <button id="launch-ar-button">ARを起動する</button>
-        <p>作品パネルにスマートフォンをかざし、音の記憶を聴く体験です。イヤホンをご用意ください。</p>
-        
-        <button id="leave-sound-button">音を残す</button>
-        <p>あなたの「好き」な公園の音を、作品の一部として残すための投稿フォームが開きます。</p>
+        <header>
+            <h1>Resonance ―響き合い</h1>
+            <p class="author">金子淳平</p>
+        </header>
+        <main>
+            <a href="./ar.html" class="button-link">
+                <button id="launch-ar-button">ARを体験する</button>
+            </a>
+            <p class="description">作品パネルにスマートフォンをかざし、音の記憶を聴く体験です。イヤホンをご用意ください。</p>
+            
+            <a href="./submit.html" class="button-link">
+                 <button id="leave-sound-button">音を残す</button>
+            </a>
+            <p class="description">あなたの「好き」な西山公園の音を、作品の一部として次の誰かのために残すことができます。</p>
+        </main>
     </div>
-
-    <script>
-        // 「ARを起動」ボタンを押したら、ar.htmlに移動
-        document.getElementById('launch-ar-button').addEventListener('click', () => {
-            window.location.href = './ar.html';
-        });
-
-        // 「音を残す」ボタンを押したら、投稿フォームのURLに移動
-        document.getElementById('leave-sound-button').addEventListener('click', () => {
-            // 現時点では未定なので、アラートを表示するだけにしておきます
-            alert('音声投稿フォームは現在準備中です。');
-        });
-    </script>
 </body>
 </html>
