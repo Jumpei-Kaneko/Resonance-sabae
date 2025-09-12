@@ -1,0 +1,91 @@
+body { 
+    font-family: sans-serif; 
+    background-color: #111; 
+    color: #eee; 
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+}
+.container { 
+    max-width: 500px; 
+    margin: 0 auto;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+header {
+    text-align: center;
+    border-bottom: 1px solid #555;
+    padding-bottom: 10px;
+    margin-bottom: 40px;
+}
+h1 { 
+    font-size: 1.5em; 
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+.author {
+    font-size: 1em;
+    color: #aaa;
+    margin-top: 5px;
+}
+button {
+    width: 100%;
+    padding: 18px;
+    font-size: 1.2em;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+    border: 1px solid #888;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: #555;
+}
+.button-link {
+    text-decoration: none;
+}
+.description { 
+    font-size: 0.9em; 
+    color: #aaa; 
+    margin-top: 5px;
+    margin-bottom: 30px;
+    text-align: center; 
+}
+/* AR Page Specific */
+.ar-container {
+    position: relative;
+    padding: 0;
+    max-width: none;
+}
+#loader {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #111; color: white;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 10;
+    transition: opacity 0.5s;
+}
+a-scene {
+    width: 100%; height: 100%;
+}
+/* Submit Page Specific */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+input[type="file"] {
+    font-size: 1em;
+}
+#status-message {
+    margin-top: 20px;
+    color: #4CAF50;
+}
+.back-link {
+    display: block;
+    margin-top: 40px;
+    color: #aaa;
+    text-align: center;
+}
