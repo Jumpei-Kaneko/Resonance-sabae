@@ -40,50 +40,60 @@
             const recorderUI = document.getElementById('recorder-ui');
             const previewUI = document.getElementById('preview-ui');
 
-            // サーバーのアップロード先URL（あとで書き換える）
             const uploadUrl = '【ここに、あなたのサーバーのアップロード用PHPのURLを記入】';
 
             let mediaRecorder;
             let audioChunks = [];
             let recordedAudioBlob = null;
+            let mimeType = 'audio/webm'; // デフォルトの形式
+            let fileExtension = 'webm'; // デフォルトの拡張子
 
-            // --- 録音開始処理 ---
             recordButton.addEventListener('click', async () => {
                 try {
-                    // マイクへのアクセス許可を求める
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = []; // チャンクをリセット
+                    // ★★★ iPhone対応のための修正 ★★★
+                    // 'audio/mp4'形式が使えるか確認
+                    if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                        mimeType = 'audio/mp4';
+                        fileExtension = 'mp4';
+                    } else {
+                        // 使えなければデフォルトのwebmのまま
+                        mimeType = 'audio/webm';
+                        fileExtension = 'webm';
+                    }
+                    console.log('Using mimeType:', mimeType);
+                    // ★★★ ここまで ★★★
 
-                    // 録音が始まると...
+                    mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
+                    audioChunks = [];
+
                     mediaRecorder.addEventListener('start', () => {
                         recordButton.disabled = true;
                         stopButton.disabled = false;
                         statusMessage.textContent = '録音中...（30秒で自動停止します）';
                     });
 
-                    // データが利用可能になると...
                     mediaRecorder.addEventListener('dataavailable', event => {
                         audioChunks.push(event.data);
                     });
 
-                    // 録音が停止すると...
                     mediaRecorder.addEventListener('stop', () => {
-                        recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        recordedAudioBlob = new Blob(audioChunks, { type: mimeType });
                         const audioUrl = URL.createObjectURL(recordedAudioBlob);
                         audioPreview.src = audioUrl;
 
                         recorderUI.style.display = 'none';
                         previewUI.style.display = 'block';
                         statusMessage.textContent = '録音が完了しました。';
+                        
+                        stream.getTracks().forEach(track => track.stop());
                     });
                     
                     mediaRecorder.start();
 
-                    // 30秒後に自動で停止
                     setTimeout(() => {
-                        if (mediaRecorder.state === 'recording') {
+                        if (mediaRecorder && mediaRecorder.state === 'recording') {
                             mediaRecorder.stop();
                         }
                     }, 30000);
@@ -94,18 +104,19 @@
                 }
             });
 
-            // --- 録音停止処理 ---
             stopButton.addEventListener('click', () => {
-                mediaRecorder.stop();
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
             });
 
-            // --- アップロード処理 ---
             uploadButton.addEventListener('click', () => {
                 if (!recordedAudioBlob) return;
 
                 statusMessage.textContent = 'アップロード中...';
                 const formData = new FormData();
-                formData.append('audio_file', recordedAudioBlob, 'recording.webm');
+                // ファイル名に正しい拡張子を設定
+                formData.append('audio_file', recordedAudioBlob, `recording.${fileExtension}`);
 
                 fetch(uploadUrl, {
                     method: 'POST',
