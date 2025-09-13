@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     machiTarget.addEventListener("targetFound", () => {
         console.log("街パネル 発見");
-        machiAudio.play();
+        machiAudio.play().catch(e => console.error("街の音声再生エラー:", e));
     });
     machiTarget.addEventListener("targetLost", () => {
         console.log("街パネル 消失");
@@ -36,14 +36,19 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // fetchを使って、サーバーに「未再生の音をください」とお願いする
             fetch(apiUrl)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     // サーバーから音のURLが返ってきたら
                     if (data && data.soundUrl) {
                         console.log("音が見つかりました:", data.soundUrl);
                         currentKoenSoundUrl = data.soundUrl;
                         koenAudio.src = currentKoenSoundUrl;
-                        koenAudio.play();
+                        koenAudio.play().catch(e => console.error("公園の音声再生エラー:", e));
                     } else {
                         // 未再生の音がなかった場合
                         console.log("現在、聴ける音はありません。");
@@ -54,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         } else {
             // すでに音が読み込まれていれば、そのまま再生
-            koenAudio.play();
+            koenAudio.play().catch(e => console.error("公園の音声再生エラー:", e));
         }
     });
 
@@ -66,18 +71,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // 音が最後まで再生されたら、次の認識のためにリセットする
     koenAudio.addEventListener('ended', () => {
         console.log("誰かの音が終わりました。");
-        currentKoenSoundUrl = null;
-        koenAudio.removeAttribute('src'); 
+        currentKoenSoundUrl = null; // URLをリセット
+        koenAudio.removeAttribute('src'); // src属性を削除
     });
 
-
     // --- ARの起動処理 ---
-    // シーンが読み込み完了したらARを開始
-    sceneEl.addEventListener('loaded', () => {
-        const arSystem = sceneEl.systems['mindar-image-system'];
-        // ARが開始したらローディング画面を非表示に
-        arSystem.start().then(() => {
-            loader.style.display = 'none';
-        });
+    const arStartButton = document.getElementById('ar-start-button');
+    const arSystem = sceneEl.systems['mindar-image-system'];
+
+    // START ARボタンがクリックされたら、ARを開始する
+    arStartButton.addEventListener('click', () => {
+        // ローディング画面を非表示にし、ARシステムを開始
+        loader.style.display = 'none';
+        arSystem.start();
     });
 });
