@@ -12,13 +12,15 @@
 <body>
     <div class="container ar-container">
         <div id="loader">
-            <p>LOADING...</p>
+            <button id="ar-start-button" style="padding: 12px 24px; font-size: 18px; border: 2px solid white; background: transparent; color: white; cursor: pointer;">
+                START AR
+            </button>
         </div>
-
+        
         <audio id="audio-machi" src="./audio/sabae.mp3" loop preload="auto"></audio>
         <audio id="audio-koen" preload="auto"></audio>
 
-        <a-scene mindar-image="imageTargetSrc: ./mind/targets.mind; maxTrack: 2; autoStart: false;" embedded vr-mode-ui="enabled: false">
+        <a-scene mindar-image="imageTargetSrc: ./mind/targets.mind; maxTrack: 2; autoStart: false;" embedded vr-mode-ui="enabled: false" color-space="sRGB" renderer="colorManagement: true" device-orientation-permission-ui="enabled: false">
             <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
             <a-entity id="target-machi" mindar-image-target="targetIndex: 0"></a-entity>
