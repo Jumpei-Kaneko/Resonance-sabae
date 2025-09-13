@@ -24,13 +24,17 @@ header {
     margin-bottom: 60px;
 }
 h1 { 
-    /* ↓↓↓ 画面幅に応じて文字サイズを自動調整するように変更 ↓↓↓ */
-    font-size: clamp(1.4em, 8vw, 1.8em);
+    font-size: 1.8em; 
     letter-spacing: 0.15em;
     font-weight: normal;
     margin: 0;
     padding-bottom: 15px;
     border-bottom: 1px solid #444;
+}
+/* index.htmlのタイトルだけに適用するスタイル */
+.index-header h1 {
+    /* 画面幅に応じて文字サイズを自動調整 */
+    font-size: clamp(1.4em, 8vw, 1.8em); 
 }
 .author {
     font-size: 1em;
@@ -44,7 +48,7 @@ main {
     width: 100%;
 }
 
-/* --- ボタンのスタイルを刷新 --- */
+/* --- ボタンのスタイル --- */
 .button-link {
     text-decoration: none;
     display: block;
@@ -58,7 +62,6 @@ button {
     cursor: pointer;
     background-color: transparent;
     border: 1px solid #888;
-    /* ↓↓↓ 最初から文字を白くする設定 ↓↓↓ */
     color: #fff; 
     transition: background-color 0.3s, color 0.3s;
 }
