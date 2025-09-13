@@ -1,10 +1,10 @@
 /* --- 全体の基本設定 --- */
 body { 
-    background-color: #000; /* 背景を黒に */
-    color: #fff; /* 基本の文字色を白に */
-    font-family: "游明朝体", "Yu Mincho", "Hiragino Mincho ProN", serif; /* 游明朝体を指定 */
+    background-color: #000;
+    color: #fff;
+    font-family: "游明朝体", "Yu Mincho", "Hiragino Mincho ProN", serif;
     margin: 0;
-    -webkit-font-smoothing: antialiased; /* 文字を滑らかに表示 */
+    -webkit-font-smoothing: antialiased;
 }
 
 /* --- コンテンツ全体のレイアウト --- */
@@ -24,12 +24,13 @@ header {
     margin-bottom: 60px;
 }
 h1 { 
-    font-size: 1.8em; 
-    letter-spacing: 0.15em; /* 文字間を広げて上品に */
+    /* ↓↓↓ 画面幅に応じて文字サイズを自動調整するように変更 ↓↓↓ */
+    font-size: clamp(1.4em, 8vw, 1.8em);
+    letter-spacing: 0.15em;
     font-weight: normal;
     margin: 0;
     padding-bottom: 15px;
-    border-bottom: 1px solid #444; /* 控えめな線 */
+    border-bottom: 1px solid #444;
 }
 .author {
     font-size: 1em;
@@ -47,22 +48,23 @@ main {
 .button-link {
     text-decoration: none;
     display: block;
-    color: #fff;
 }
 button {
     width: 100%;
     padding: 15px;
     font-size: 1.2em;
-    font-family: "游明朝体", "Yu Mincho", serif; /* ボタンのフォントも統一 */
+    font-family: "游明朝体", "Yu Mincho", serif;
     letter-spacing: 0.1em;
     cursor: pointer;
-    background-color: transparent; /* 背景を透明に */
-    border: 1px solid #888; /* 枠線を設定 */
+    background-color: transparent;
+    border: 1px solid #888;
+    /* ↓↓↓ 最初から文字を白くする設定 ↓↓↓ */
+    color: #fff; 
     transition: background-color 0.3s, color 0.3s;
 }
 button:hover {
-    background-color: #fff; /* ホバー時に白く */
-    color: #000; /* ホバー時に文字を黒く */
+    background-color: #fff;
+    color: #000;
 }
 
 /* --- ボタン下の説明文 --- */
@@ -76,29 +78,10 @@ button:hover {
 }
 
 /* --- ARページと投稿ページのスタイル --- */
-.ar-container {
-    padding: 0; max-width: none;
-}
-#loader {
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: #000; color: white;
-    display: flex; justify-content: center; align-items: center;
-    z-index: 10;
-    transition: opacity 0.5s;
-}
-a-scene {
-    width: 100%; height: 100%;
-}
-form {
-    display: flex; flex-direction: column; gap: 20px;
-}
-input[type="file"] {
-    font-size: 1em; color: #fff;
-}
-#status-message {
-    margin-top: 20px; color: #4CAF50;
-}
-.back-link {
-    display: block; margin-top: 40px; color: #aaa; text-align: center;
-}
+.ar-container { padding: 0; max-width: none; }
+#loader { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: white; display: flex; justify-content: center; align-items: center; z-index: 10; transition: opacity 0.5s; }
+a-scene { width: 100%; height: 100%; }
+form { display: flex; flex-direction: column; gap: 20px; }
+input[type="file"] { font-size: 1em; color: #fff; }
+#status-message { margin-top: 20px; color: #4CAF50; }
+.back-link { display: block; margin-top: 40px; color: #aaa; text-align: center; }
