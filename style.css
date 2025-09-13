@@ -1,68 +1,88 @@
+/* --- 全体の基本設定 --- */
 body { 
-    font-family: sans-serif; 
-    background-color: #111; 
-    color: #eee; 
+    background-color: #000; /* 背景を黒に */
+    color: #fff; /* 基本の文字色を白に */
+    font-family: "游明朝体", "Yu Mincho", "Hiragino Mincho ProN", serif; /* 游明朝体を指定 */
     margin: 0;
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased; /* 文字を滑らかに表示 */
 }
+
+/* --- コンテンツ全体のレイアウト --- */
 .container { 
-    max-width: 500px; 
+    max-width: 550px; 
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 20px;
     height: 100vh;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
 }
+
+/* --- ヘッダー（タイトル部分） --- */
 header {
     text-align: center;
-    border-bottom: 1px solid #555;
-    padding-bottom: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
 }
 h1 { 
-    font-size: 1.5em; 
-    letter-spacing: 0.1em;
+    font-size: 1.8em; 
+    letter-spacing: 0.15em; /* 文字間を広げて上品に */
+    font-weight: normal;
     margin: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #444; /* 控えめな線 */
 }
 .author {
     font-size: 1em;
     color: #aaa;
-    margin-top: 5px;
+    margin-top: 10px;
+    letter-spacing: 0.1em;
+}
+
+/* --- メインコンテンツ --- */
+main {
+    width: 100%;
+}
+
+/* --- ボタンのスタイルを刷新 --- */
+.button-link {
+    text-decoration: none;
+    display: block;
+    color: #fff;
 }
 button {
     width: 100%;
-    padding: 18px;
+    padding: 15px;
     font-size: 1.2em;
+    font-family: "游明朝体", "Yu Mincho", serif; /* ボタンのフォントも統一 */
+    letter-spacing: 0.1em;
     cursor: pointer;
-    background-color: #333;
-    color: white;
-    border: 1px solid #888;
-    transition: background-color 0.3s;
+    background-color: transparent; /* 背景を透明に */
+    border: 1px solid #888; /* 枠線を設定 */
+    transition: background-color 0.3s, color 0.3s;
 }
 button:hover {
-    background-color: #555;
+    background-color: #fff; /* ホバー時に白く */
+    color: #000; /* ホバー時に文字を黒く */
 }
-.button-link {
-    text-decoration: none;
-}
+
+/* --- ボタン下の説明文 --- */
 .description { 
     font-size: 0.9em; 
     color: #aaa; 
-    margin-top: 5px;
-    margin-bottom: 30px;
+    margin-top: 8px;
+    margin-bottom: 40px;
     text-align: center; 
+    line-height: 1.6;
 }
-/* AR Page Specific */
+
+/* --- ARページと投稿ページのスタイル --- */
 .ar-container {
-    position: relative;
-    padding: 0;
-    max-width: none;
+    padding: 0; max-width: none;
 }
 #loader {
     position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
-    background: #111; color: white;
+    background: #000; color: white;
     display: flex; justify-content: center; align-items: center;
     z-index: 10;
     transition: opacity 0.5s;
@@ -70,22 +90,15 @@ button:hover {
 a-scene {
     width: 100%; height: 100%;
 }
-/* Submit Page Specific */
 form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: flex; flex-direction: column; gap: 20px;
 }
 input[type="file"] {
-    font-size: 1em;
+    font-size: 1em; color: #fff;
 }
 #status-message {
-    margin-top: 20px;
-    color: #4CAF50;
+    margin-top: 20px; color: #4CAF50;
 }
 .back-link {
-    display: block;
-    margin-top: 40px;
-    color: #aaa;
-    text-align: center;
+    display: block; margin-top: 40px; color: #aaa; text-align: center;
 }
