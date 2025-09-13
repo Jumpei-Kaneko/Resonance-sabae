@@ -15,7 +15,9 @@
         <main>
             <form id="upload-form">
                 <p>あなたの好きな西山公園の音（30秒以内）を、作品の一部として残してみませんか？</p>
-                <input type="file" id="audio-file" accept="audio/*" required>
+                
+                <input type="file" id="audio-file" accept="audio/*" capture="user" required>
+                
                 <button type="submit">この音を作品に残す</button>
             </form>
             <div id="status-message"></div>
