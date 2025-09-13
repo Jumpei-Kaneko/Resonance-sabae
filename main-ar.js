@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const sceneEl = document.querySelector('a-scene');
     const loader = document.getElementById('loader');
     
+    // --- 音声要素の取得 ---
+    const machiAudio = document.querySelector('#audio-machi');
+    const koenAudio = document.querySelector('#audio-koen');
+    
     // --- 街パネル（私）の制御 ---
     const machiTarget = document.querySelector('#target-machi');
-    const machiAudio = document.querySelector('#audio-machi');
-
     machiTarget.addEventListener("targetFound", () => {
         console.log("街パネル 発見");
         machiAudio.play().catch(e => console.error("街の音声再生エラー:", e));
@@ -17,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 公園パネル（誰か）の制御 ---
     const koenTarget = document.querySelector('#target-koen');
-    const koenAudio = document.querySelector('#audio-koen');
     const apiUrl = '【ここに、あなたのサーバーAPIのURLを記入】';
     let currentKoenSoundUrl = null;
 
@@ -62,13 +63,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ARの起動処理 ---
     const arStartButton = document.getElementById('ar-start-button');
 
-    // START ARボタンがクリックされたら、ARを開始する
     arStartButton.addEventListener('click', () => {
-        // ★★★ この瞬間にARシステムを取得する ★★★
+        // ★★★ この部分が重要 ★★★
+        // ユーザーの最初のクリック操作の瞬間に、全ての音を「アンロック」する
+        console.log("Unlocking audio...");
+        machiAudio.play();
+        machiAudio.pause();
+        koenAudio.play();
+        koenAudio.pause();
+        // ★★★ ここまで ★★★
+
         const arSystem = sceneEl.systems['mindar-image-system'];
-        
-        // ローディング画面を非表示にし、ARシステムを開始
         loader.style.display = 'none';
-        arSystem.start(); // これでarSystemが空っぽでなくなる
+        arSystem.start();
     });
 });
