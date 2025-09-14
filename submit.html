@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>音を残す - Resonance (Debug)</title>
+    <title>音を残す - Resonance</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,50 +11,45 @@
         <header><h1>音を残す</h1></header>
         <main>
             <p>あなたの好きな西山公園の音を、作品の一部として残してみませんか？</p>
+            
             <div id="recorder-ui">
                 <button id="record-button">録音開始</button>
                 <button id="stop-button" disabled>録音停止</button>
             </div>
+
+            <div id="preview-ui" style="display: none;">
+                <p>録音した音声を確認し、作品に残してください：</p>
+                <audio id="audio-preview" controls></audio>
+                </div>
+
             <div id="status-message"></div>
             <a href="./index.html" class="back-link">メニューに戻る</a>
         </main>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const recordButton = document.getElementById('record-button');
             const stopButton = document.getElementById('stop-button');
+            const audioPreview = document.getElementById('audio-preview');
             const statusMessage = document.getElementById('status-message');
-            const uploadUrl = 'https://xs525048.xsrv.jp/upload.php'; // あなたのURL
+            const recorderUI = document.getElementById('recorder-ui');
+            const previewUI = document.getElementById('preview-ui');
+
+            const uploadUrl = 'https://xs525048.xsrv.jp/upload.php'; // あなたのサーバーURL
+
             let mediaRecorder;
             let audioChunks = [];
-            
-            // --- アップロード処理を別の関数に切り出す ---
-            const uploadBlob = (blob, extension) => {
-                statusMessage.textContent = 'アップロード中...';
-                const formData = new FormData();
-                formData.append('audio_file', blob, `recording.${extension}`);
-                fetch(uploadUrl, { method: 'POST', body: formData })
-                    .then(response => {
-                        if (!response.ok) throw new Error('アップロードに失敗しました。');
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('アップロード成功:', data);
-                        statusMessage.textContent = 'あなたの音を、作品に残しました。ありがとうございます。';
-                        recordButton.disabled = true;
-                        stopButton.disabled = true;
-                    })
-                    .catch(error => {
-                        console.error('アップロードエラー:', error);
-                        statusMessage.textContent = `エラー：${error.message}`;
-                    });
-            };
 
             recordButton.addEventListener('click', async () => {
+                // UIを初期状態に戻す
+                recorderUI.style.display = 'block';
+                previewUI.style.display = 'none';
+                statusMessage.textContent = '';
+                
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    let mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : 'audio/webm';
-                    let fileExtension = mimeType.split('/')[1];
+                    const mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : 'audio/webm';
                     
                     mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
                     audioChunks = [];
@@ -62,22 +57,58 @@
                     mediaRecorder.addEventListener('start', () => {
                         recordButton.disabled = true;
                         stopButton.disabled = false;
-                        statusMessage.textContent = '録音中...';
+                        statusMessage.textContent = '録音中...（30秒で自動停止します）';
                     });
 
                     mediaRecorder.addEventListener('dataavailable', event => {
                         audioChunks.push(event.data);
                     });
-
-                    // ★★★ 録音が停止したら、プレビューせずに直接アップロード ★★★
+                    
+                    // ★★★ 録音が停止したら、すぐにアップロードしてプレビューする ★★★
                     mediaRecorder.addEventListener('stop', () => {
-                        statusMessage.textContent = '録音が完了しました。アップロードを開始します。';
+                        statusMessage.textContent = '録音が完了しました。アップロードして確認します...';
                         const recordedAudioBlob = new Blob(audioChunks, { type: mimeType });
-                        uploadBlob(recordedAudioBlob, fileExtension); // アップロード関数を呼び出す
+                        
+                        // --- ここからが新しいロジック ---
+                        const formData = new FormData();
+                        formData.append('audio_file', recordedAudioBlob, `recording.${mimeType.split('/')[1]}`);
+
+                        fetch(uploadUrl, { method: 'POST', body: formData })
+                            .then(response => {
+                                if (!response.ok) throw new Error('アップロードに失敗しました。');
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    // アップロードが成功したら、そのファイルのURLでプレビューを再生
+                                    const previewUrl = `https://xs525048.xsrv.jp/${data.file_path}`;
+                                    audioPreview.src = previewUrl;
+                                    
+                                    recorderUI.style.display = 'none';
+                                    previewUI.style.display = 'block';
+                                    statusMessage.textContent = 'あなたの音を、作品に残しました。ありがとうございます。';
+                                } else {
+                                    throw new Error(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                statusMessage.textContent = `エラー：${error.message}`;
+                                recordButton.disabled = false;
+                                stopButton.disabled = true;
+                            });
+                        // --- ここまで ---
+                        
                         stream.getTracks().forEach(track => track.stop());
                     });
                     
                     mediaRecorder.start();
+
+                    setTimeout(() => {
+                        if (mediaRecorder && mediaRecorder.state === 'recording') {
+                            mediaRecorder.stop();
+                        }
+                    }, 30000);
+
                 } catch (err) {
                     statusMessage.textContent = 'エラー：マイクへのアクセスが許可されませんでした。';
                 }
