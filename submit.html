@@ -40,30 +40,27 @@
             const recorderUI = document.getElementById('recorder-ui');
             const previewUI = document.getElementById('preview-ui');
 
-            const uploadUrl = '【ここに、あなたのサーバーのアップロード用PHPのURLを記入】';
+            // ↓↓↓ あなたのサーバーアドレスに書き換えました ↓↓↓
+            const uploadUrl = 'https://xs525048.xsrv.jp/upload.php';
 
             let mediaRecorder;
             let audioChunks = [];
             let recordedAudioBlob = null;
-            let mimeType = 'audio/webm'; // デフォルトの形式
-            let fileExtension = 'webm'; // デフォルトの拡張子
+            let mimeType = 'audio/webm';
+            let fileExtension = 'webm';
 
             recordButton.addEventListener('click', async () => {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     
-                    // ★★★ iPhone対応のための修正 ★★★
-                    // 'audio/mp4'形式が使えるか確認
                     if (MediaRecorder.isTypeSupported('audio/mp4')) {
                         mimeType = 'audio/mp4';
                         fileExtension = 'mp4';
                     } else {
-                        // 使えなければデフォルトのwebmのまま
                         mimeType = 'audio/webm';
                         fileExtension = 'webm';
                     }
                     console.log('Using mimeType:', mimeType);
-                    // ★★★ ここまで ★★★
 
                     mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
                     audioChunks = [];
@@ -115,7 +112,6 @@
 
                 statusMessage.textContent = 'アップロード中...';
                 const formData = new FormData();
-                // ファイル名に正しい拡張子を設定
                 formData.append('audio_file', recordedAudioBlob, `recording.${fileExtension}`);
 
                 fetch(uploadUrl, {
@@ -124,18 +120,22 @@
                 })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('アップロードに失敗しました。');
+                        throw new Error('アップロードに失敗しました。サーバーが応答しません。');
                     }
                     return response.json();
                 })
                 .then(data => {
                     console.log('アップロード成功:', data);
-                    statusMessage.textContent = 'あなたの音を、作品に残しました。ありがとうございます。';
-                    uploadButton.disabled = true;
+                    if (data.status === 'success') {
+                        statusMessage.textContent = 'あなたの音を、作品に残しました。ありがとうございます。';
+                        uploadButton.disabled = true;
+                    } else {
+                        throw new Error(data.message || 'サーバー側でエラーが発生しました。');
+                    }
                 })
                 .catch(error => {
                     console.error('アップロードエラー:', error);
-                    statusMessage.textContent = 'エラー：アップロードに失敗しました。';
+                    statusMessage.textContent = `エラー：${error.message}`;
                 });
             });
         });
